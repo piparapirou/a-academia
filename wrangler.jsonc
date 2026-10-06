@@ -1,0 +1,7 @@
+{
+  // Publica SOMENTE a pasta publico/ (painéis protegidos por senha).
+  // As análises em artefatos/ têm dados sem criptografia e NÃO vão para o site.
+  "name": "a-academia",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": "./publico" }
+}
