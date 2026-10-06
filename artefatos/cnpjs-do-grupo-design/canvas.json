@@ -1,0 +1,55 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Faixa.dc.html": {
+      "h": 300,
+      "is_interactive": true,
+      "title": "C · Faixa no topo da Validação",
+      "w": 1200,
+      "x": 0,
+      "y": 900
+    },
+    "Lista.dc.html": {
+      "h": 560,
+      "is_interactive": true,
+      "title": "B · Lista compacta",
+      "w": 880,
+      "x": 960,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "h": 780,
+      "is_interactive": true,
+      "title": "A · Cartões por unidade",
+      "w": 880,
+      "x": 0,
+      "y": 0
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-05T18:58:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "t1": {
+      "kind": "title1",
+      "maxW": 1840,
+      "text": "CNPJs do grupo · 3 apresentações",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Lista.dc.html",
+    "Faixa.dc.html"
+  ],
+  "pages": [],
+  "title": "CNPJs do grupo – apresentação"
+}

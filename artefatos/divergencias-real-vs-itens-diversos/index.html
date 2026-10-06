@@ -1,0 +1,881 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise de Divergências - Real vs Itens Diversos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .note {
+            background: #eff6ff;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            border-radius: 6px;
+            color: #0c4a6e;
+            font-size: 0.95rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary.active {
+            background: #764ba2;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-label {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+        }
+
+        .ranking-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .ranking-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid;
+            text-align: center;
+        }
+
+        .ranking-1 { border-top-color: #fbbf24; }
+        .ranking-2 { border-top-color: #a78bfa; }
+        .ranking-3 { border-top-color: #f87171; }
+        .ranking-4 { border-top-color: #60a5fa; }
+        .ranking-5 { border-top-color: #34d399; }
+
+        .rank-position {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .rank-1 .rank-position { color: #fbbf24; }
+        .rank-2 .rank-position { color: #a78bfa; }
+        .rank-3 .rank-position { color: #f87171; }
+        .rank-4 .rank-position { color: #60a5fa; }
+        .rank-5 .rank-position { color: #34d399; }
+
+        .rank-name {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .rank-stat {
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .rank-label {
+            color: #6b7280;
+            display: block;
+            margin-bottom: 0.25rem;
+            font-size: 0.85rem;
+        }
+
+        .rank-value {
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .bar-chart {
+            margin: 2rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .bar-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bar-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .bar-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.25rem;
+        }
+
+        .bar {
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(90deg, #667eea 0%, #5568d3 100%);
+            border-radius: 6px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.9rem;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 700;
+            line-height: 32px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .insights {
+            background: #eff6ff;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .insights-title {
+            font-weight: 600;
+            color: #0c4a6e;
+            margin-bottom: 1rem;
+        }
+
+        .insights-list {
+            list-style: none;
+        }
+
+        .insights-list li {
+            margin-bottom: 0.75rem;
+            color: #1e40af;
+            font-size: 0.95rem;
+        }
+
+        .insights-list li:before {
+            content: "→ ";
+            margin-right: 0.5rem;
+            font-weight: 600;
+        }
+
+        .warning-box {
+            background: #fee2e2;
+            border-left: 4px solid #dc2626;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+
+        .warning-title {
+            font-weight: 600;
+            color: #7f1d1d;
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-text {
+            color: #991b1b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Análise de Divergências</h1>
+            <p class="subtitle">Comparativo entre faturamento REAL e itens diversos (complementos/extras)</p>
+            <div class="note">
+                <strong>Estrutura de Análise:</strong> REAL = Faturamento principal (formas de pagamento) | Itens Diversos = Complementos e serviços extras | APURADO = REAL + Itens Diversos
+            </div>
+            <div class="controls">
+                <button class="btn-primary active" onclick="changeView('overview')">Visão Geral</button>
+                <button class="btn-primary" onclick="changeView('ranking')">Ranking por Unidade</button>
+                <button class="btn-primary" onclick="changeView('top15')">Top 15 Divergências</button>
+                <button class="btn-primary" onclick="changeView('detail')">Detalhes Mensais</button>
+            </div>
+        </div>
+
+        <!-- Visão Geral -->
+        <div id="overview" class="view-section">
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-value">R$ 6,34M</div>
+                    <div class="card-label">Total REAL (Faturamento)</div>
+                </div>
+                <div class="card">
+                    <div class="card-value">R$ 59,55k</div>
+                    <div class="card-label">Total Itens Diversos</div>
+                </div>
+                <div class="card">
+                    <div class="card-value">R$ 6,40M</div>
+                    <div class="card-label">Total APURADO</div>
+                </div>
+                <div class="card">
+                    <div class="card-value">0.94%</div>
+                    <div class="card-label">% Itens Diversos (Média)</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Faturamento e Itens Diversos por Unidade</div>
+                <div class="bar-chart">
+                    <div class="bar-item">
+                        <div class="bar-label">A Nova Campinas</div>
+                        <div class="bar-value">1.28% · R$ 29,1k</div>
+                        <div class="bar" style="width: 100%;"></div>
+                        <div style="font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem;">R$ 2,28M total</div>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar-label">A Sousas</div>
+                        <div class="bar-value">1.41% · R$ 8,6k</div>
+                        <div class="bar" style="width: 27%;"></div>
+                        <div style="font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem;">R$ 611k total</div>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar-label">Taquaral</div>
+                        <div class="bar-value">0.48% · R$ 4,8k</div>
+                        <div class="bar" style="width: 17%;"></div>
+                        <div style="font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem;">R$ 1,01M total</div>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar-label">A Paulinia</div>
+                        <div class="bar-value">0.36% · R$ 918</div>
+                        <div class="bar" style="width: 3%;"></div>
+                        <div style="font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem;">R$ 255k total</div>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar-label">A Cambuí</div>
+                        <div class="bar-value">0.28% · R$ 6,1k</div>
+                        <div class="bar" style="width: 21%;"></div>
+                        <div style="font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem;">R$ 2,19M total</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="insights">
+                <div class="insights-title">📌 Principais Achados</div>
+                <ul class="insights-list">
+                    <li>Itens diversos representam apenas 0.94% do faturamento total do grupo</li>
+                    <li><strong>A Sousas</strong> lidera com 1.41% de itens diversos em relação ao faturamento</li>
+                    <li><strong>A Nova Campinas</strong>, apesar de menor percentual (1.28%), tem o maior valor absoluto: R$ 29,1k</li>
+                    <li><strong>A Cambuí</strong> tem o menor percentual (0.28%), indicando menor volume de extras/complementos</li>
+                    <li>A divergência é pequena mas consistente, sugerindo controle adequado de itens diversos</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <div class="warning-title">⚠️ Interpretação</div>
+                <div class="warning-text">
+                    Os itens diversos representam apenas ~1% do faturamento, o que é saudável. A maior divergência ocorre em A Nova Campinas,
+                    mas em termos percentuais é consistente com as outras unidades. Não há sinais críticos de falta de controle.
+                </div>
+            </div>
+        </div>
+
+        <!-- Ranking por Unidade -->
+        <div id="ranking" class="view-section" style="display: none;">
+            <div class="chart-container">
+                <div class="chart-title">🏆 Ranking de Unidades por % de Itens Diversos</div>
+                <div class="ranking-container">
+                    <div class="ranking-card ranking-1">
+                        <div class="rank-position">🥇 1º</div>
+                        <div class="rank-name">A Sousas</div>
+                        <div class="rank-stat">
+                            <span class="rank-label">% de Itens Diversos:</span>
+                            <span class="rank-value">1.41%</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">REAL Total:</span>
+                            <span class="rank-value">R$ 611.205</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">Itens Diversos:</span>
+                            <span class="rank-value">R$ 8.636</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">APURADO Total:</span>
+                            <span class="rank-value">R$ 619.840</span>
+                        </div>
+                    </div>
+
+                    <div class="ranking-card ranking-2">
+                        <div class="rank-position">🥈 2º</div>
+                        <div class="rank-name">A Nova Campinas</div>
+                        <div class="rank-stat">
+                            <span class="rank-label">% de Itens Diversos:</span>
+                            <span class="rank-value">1.28%</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">REAL Total:</span>
+                            <span class="rank-value">R$ 2.277.170</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">Itens Diversos:</span>
+                            <span class="rank-value">R$ 29.067</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">APURADO Total:</span>
+                            <span class="rank-value">R$ 2.306.237</span>
+                        </div>
+                    </div>
+
+                    <div class="ranking-card ranking-3">
+                        <div class="rank-position">🥉 3º</div>
+                        <div class="rank-name">Taquaral</div>
+                        <div class="rank-stat">
+                            <span class="rank-label">% de Itens Diversos:</span>
+                            <span class="rank-value">0.48%</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">REAL Total:</span>
+                            <span class="rank-value">R$ 1.005.494</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">Itens Diversos:</span>
+                            <span class="rank-value">R$ 4.843</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">APURADO Total:</span>
+                            <span class="rank-value">R$ 1.010.337</span>
+                        </div>
+                    </div>
+
+                    <div class="ranking-card ranking-4">
+                        <div class="rank-position">4º</div>
+                        <div class="rank-name">A Paulinia</div>
+                        <div class="rank-stat">
+                            <span class="rank-label">% de Itens Diversos:</span>
+                            <span class="rank-value">0.36%</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">REAL Total:</span>
+                            <span class="rank-value">R$ 255.068</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">Itens Diversos:</span>
+                            <span class="rank-value">R$ 918</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">APURADO Total:</span>
+                            <span class="rank-value">R$ 255.986</span>
+                        </div>
+                    </div>
+
+                    <div class="ranking-card ranking-5">
+                        <div class="rank-position">5º</div>
+                        <div class="rank-name">A Cambuí</div>
+                        <div class="rank-stat">
+                            <span class="rank-label">% de Itens Diversos:</span>
+                            <span class="rank-value">0.28%</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">REAL Total:</span>
+                            <span class="rank-value">R$ 2.187.411</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">Itens Diversos:</span>
+                            <span class="rank-value">R$ 6.089</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">APURADO Total:</span>
+                            <span class="rank-value">R$ 2.193.500</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="insights">
+                <div class="insights-title">📊 Análise do Ranking</div>
+                <ul class="insights-list">
+                    <li>A diferença entre a 1ª e 5ª colocadas é de apenas 1.13 pontos percentuais (1.41% vs 0.28%)</li>
+                    <li>A Sousas e A Nova Campinas controlam melhor os itens diversos (> 1%)</li>
+                    <li>Taquaral, Paulinia e Cambuí têm controle menor (< 0.5%), possível oportunidade de melhoria</li>
+                    <li>Nenhuma unidade está em situação crítica - todas mantêm itens diversos baixos e controlados</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Top 15 Divergências -->
+        <div id="top15" class="view-section" style="display: none;">
+            <div class="chart-container">
+                <div class="chart-title">🔝 Top 15: Maiores Divergências Absolutas (R$)</div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Unidade</th>
+                                <th>Mês</th>
+                                <th>REAL (R$)</th>
+                                <th>Itens Diversos (R$)</th>
+                                <th>Divergência %</th>
+                                <th>APURADO (R$)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="rank-badge">1º</span></td>
+                                <td>A Nova Campinas</td>
+                                <td>Abr/2026</td>
+                                <td>326.658,50</td>
+                                <td style="font-weight: 600; color: #10b981;">12.308,00</td>
+                                <td>3.77%</td>
+                                <td>338.966,50</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge">2º</span></td>
+                                <td>A Nova Campinas</td>
+                                <td>Mar/2026</td>
+                                <td>496.217,10</td>
+                                <td style="font-weight: 600; color: #10b981;">9.927,10</td>
+                                <td>2.00%</td>
+                                <td>506.144,20</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge">3º</span></td>
+                                <td>A Nova Campinas</td>
+                                <td>Jun/2026</td>
+                                <td>224.006,00</td>
+                                <td style="font-weight: 600; color: #10b981;">5.426,00</td>
+                                <td>2.42%</td>
+                                <td>229.432,00</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge">4º</span></td>
+                                <td>A Sousas</td>
+                                <td>Abr/2026</td>
+                                <td>85.232,00</td>
+                                <td style="font-weight: 600; color: #10b981;">3.922,50</td>
+                                <td>4.60%</td>
+                                <td>89.154,50</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge">5º</span></td>
+                                <td>A Cambuí</td>
+                                <td>Ago/2026</td>
+                                <td>286.780,00</td>
+                                <td style="font-weight: 600; color: #10b981;">3.568,00</td>
+                                <td>1.24%</td>
+                                <td>290.348,00</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge">6º</span></td>
+                                <td>Taquaral</td>
+                                <td>Jan/2026</td>
+                                <td>162.874,74</td>
+                                <td style="font-weight: 600; color: #10b981;">1.969,75</td>
+                                <td>1.21%</td>
+                                <td>164.844,49</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge">7º</span></td>
+                                <td>A Sousas</td>
+                                <td>Jun/2026</td>
+                                <td>42.969,00</td>
+                                <td style="font-weight: 600; color: #10b981;">1.880,00</td>
+                                <td>4.38%</td>
+                                <td>44.849,00</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge">8º</span></td>
+                                <td>Taquaral</td>
+                                <td>Mai/2026</td>
+                                <td>149.313,10</td>
+                                <td style="font-weight: 600; color: #10b981;">1.617,00</td>
+                                <td>1.08%</td>
+                                <td>150.930,10</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge">9º</span></td>
+                                <td>A Cambuí</td>
+                                <td>Mar/2026</td>
+                                <td>315.675,00</td>
+                                <td style="font-weight: 600; color: #10b981;">1.482,00</td>
+                                <td>0.47%</td>
+                                <td>317.157,00</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge">10º</span></td>
+                                <td>Taquaral</td>
+                                <td>Jul/2026</td>
+                                <td>128.761,30</td>
+                                <td style="font-weight: 600; color: #10b981;">1.116,40</td>
+                                <td>0.87%</td>
+                                <td>129.877,70</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge">11º</span></td>
+                                <td>A Sousas</td>
+                                <td>Mar/2026</td>
+                                <td>114.345,00</td>
+                                <td style="font-weight: 600; color: #10b981;">835,00</td>
+                                <td>0.73%</td>
+                                <td>115.180,00</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge">12º</span></td>
+                                <td>A Sousas</td>
+                                <td>Mai/2026</td>
+                                <td>88.107,00</td>
+                                <td style="font-weight: 600; color: #10b981;">765,00</td>
+                                <td>0.87%</td>
+                                <td>88.872,00</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge">13º</span></td>
+                                <td>A Nova Campinas</td>
+                                <td>Ago/2026</td>
+                                <td>353.613,00</td>
+                                <td style="font-weight: 600; color: #10b981;">750,00</td>
+                                <td>0.21%</td>
+                                <td>354.363,00</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge">14º</span></td>
+                                <td>A Sousas</td>
+                                <td>Ago/2026</td>
+                                <td>108.101,00</td>
+                                <td style="font-weight: 600; color: #10b981;">616,00</td>
+                                <td>0.57%</td>
+                                <td>108.717,00</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge">15º</span></td>
+                                <td>A Paulinia</td>
+                                <td>Jul/2026</td>
+                                <td>20.878,00</td>
+                                <td style="font-weight: 600; color: #10b981;">496,00</td>
+                                <td>2.38%</td>
+                                <td>21.374,00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="insights">
+                <div class="insights-title">🔍 Destaques do Top 15</div>
+                <ul class="insights-list">
+                    <li><strong>A Nova Campinas domina</strong> os 3 primeiros lugares, com Abril/2026 atingindo R$ 12.308 (3.77%)</li>
+                    <li><strong>A Sousas aparece 4 vezes</strong> no Top 15, concentrando seus itens em Abril e Junho</li>
+                    <li>Picos ocorrem principalmente em <strong>Março, Abril e Junho</strong> - períodos possíveis de promoções ou eventos</li>
+                    <li>A maior divergência (3.77%) ainda é considerada baixa - indica bom controle operacional</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Detalhes Mensais -->
+        <div id="detail" class="view-section" style="display: none;">
+            <div class="chart-container">
+                <div class="chart-title">📅 Detalhes Mensais por Unidade</div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Unidade</th>
+                                <th>Mês</th>
+                                <th>REAL (R$)</th>
+                                <th>Itens Diversos (R$)</th>
+                                <th>APURADO (R$)</th>
+                                <th>Divergência %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" style="font-weight: 600; background: #f3f4f6; padding: 1rem;">A NOVA CAMPINAS</td>
+                            </tr>
+                            <tr>
+                                <td>A Nova Campinas</td>
+                                <td>Jan/2026</td>
+                                <td>292.728,00</td>
+                                <td>200,00</td>
+                                <td>292.928,00</td>
+                                <td>0.07%</td>
+                            </tr>
+                            <tr>
+                                <td>A Nova Campinas</td>
+                                <td>Mar/2026</td>
+                                <td>496.217,10</td>
+                                <td>9.927,10</td>
+                                <td>506.144,20</td>
+                                <td>2.00%</td>
+                            </tr>
+                            <tr>
+                                <td>A Nova Campinas</td>
+                                <td>Abr/2026</td>
+                                <td>326.658,50</td>
+                                <td>12.308,00</td>
+                                <td>338.966,50</td>
+                                <td>3.77%</td>
+                            </tr>
+                            <tr>
+                                <td>A Nova Campinas</td>
+                                <td>Mai/2026</td>
+                                <td>306.276,00</td>
+                                <td>306,00</td>
+                                <td>306.582,00</td>
+                                <td>0.10%</td>
+                            </tr>
+                            <tr>
+                                <td>A Nova Campinas</td>
+                                <td>Jun/2026</td>
+                                <td>224.006,00</td>
+                                <td>5.426,00</td>
+                                <td>229.432,00</td>
+                                <td>2.42%</td>
+                            </tr>
+                            <tr>
+                                <td>A Nova Campinas</td>
+                                <td>Jul/2026</td>
+                                <td>277.671,00</td>
+                                <td>150,00</td>
+                                <td>277.821,00</td>
+                                <td>0.05%</td>
+                            </tr>
+                            <tr>
+                                <td>A Nova Campinas</td>
+                                <td>Ago/2026</td>
+                                <td>353.613,00</td>
+                                <td>750,00</td>
+                                <td>354.363,00</td>
+                                <td>0.21%</td>
+                            </tr>
+                            <tr style="font-weight: 600; background: #f0fdf4;">
+                                <td>TOTAL A NOVA CAMPINAS</td>
+                                <td></td>
+                                <td>2.277.169,60</td>
+                                <td>29.067,10</td>
+                                <td>2.306.236,70</td>
+                                <td>1.28%</td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" style="font-weight: 600; background: #f3f4f6; padding: 1rem;">A SOUSAS</td>
+                            </tr>
+                            <tr>
+                                <td>A Sousas</td>
+                                <td>Jan/2026</td>
+                                <td>101.014,00</td>
+                                <td>160,00</td>
+                                <td>101.174,00</td>
+                                <td>0.16%</td>
+                            </tr>
+                            <tr>
+                                <td>A Sousas</td>
+                                <td>Mar/2026</td>
+                                <td>114.345,00</td>
+                                <td>835,00</td>
+                                <td>115.180,00</td>
+                                <td>0.73%</td>
+                            </tr>
+                            <tr>
+                                <td>A Sousas</td>
+                                <td>Abr/2026</td>
+                                <td>85.232,00</td>
+                                <td>3.922,50</td>
+                                <td>89.154,50</td>
+                                <td>4.60%</td>
+                            </tr>
+                            <tr>
+                                <td>A Sousas</td>
+                                <td>Mai/2026</td>
+                                <td>88.107,00</td>
+                                <td>765,00</td>
+                                <td>88.872,00</td>
+                                <td>0.87%</td>
+                            </tr>
+                            <tr>
+                                <td>A Sousas</td>
+                                <td>Jun/2026</td>
+                                <td>42.969,00</td>
+                                <td>1.880,00</td>
+                                <td>44.849,00</td>
+                                <td>4.38%</td>
+                            </tr>
+                            <tr>
+                                <td>A Sousas</td>
+                                <td>Jul/2026</td>
+                                <td>71.436,60</td>
+                                <td>457,00</td>
+                                <td>71.893,60</td>
+                                <td>0.64%</td>
+                            </tr>
+                            <tr>
+                                <td>A Sousas</td>
+                                <td>Ago/2026</td>
+                                <td>108.101,00</td>
+                                <td>616,00</td>
+                                <td>108.717,00</td>
+                                <td>0.57%</td>
+                            </tr>
+                            <tr style="font-weight: 600; background: #f0fdf4;">
+                                <td>TOTAL A SOUSAS</td>
+                                <td></td>
+                                <td>611.204,60</td>
+                                <td>8.635,50</td>
+                                <td>619.840,10</td>
+                                <td>1.41%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function changeView(viewName) {
+            document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
+            document.getElementById(viewName).style.display = 'block';
+            document.querySelectorAll('.btn-primary').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
+</body></html>

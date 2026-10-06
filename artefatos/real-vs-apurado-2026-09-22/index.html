@@ -1,0 +1,1044 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Academia - Análise REAL vs APURADO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 1.05em;
+            opacity: 0.95;
+            margin: 5px 0;
+            font-weight: 500;
+        }
+
+        .header p:last-child {
+            font-size: 0.9em;
+            opacity: 0.85;
+            margin-top: 15px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            background: #fafafa;
+            overflow-x: auto;
+        }
+
+        .tab-button {
+            flex: 1;
+            min-width: 140px;
+            padding: 18px 24px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .tab-button:hover {
+            background: rgba(102, 126, 234, 0.05);
+            color: #667eea;
+        }
+
+        .tab-button.active {
+            background: white;
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 35px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content h2 {
+            font-size: 1.6em;
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9em;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .data-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #5568d3 100%);
+        }
+
+        .data-table th {
+            color: white;
+            padding: 16px 14px;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: left;
+        }
+
+        .data-table th.text-right {
+            text-align: right;
+        }
+
+        .data-table td {
+            padding: 13px 14px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .data-table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f5f7ff;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .text-right {
+            text-align: right !important;
+            font-family: 'Courier New', monospace;
+        }
+
+        .text-left {
+            text-align: left !important;
+        }
+
+        .number {
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            opacity: 0.9;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            letter-spacing: -1px;
+        }
+
+        .filter-section {
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0f3ff 100%);
+            padding: 24px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 1px solid #e0e6ff;
+        }
+
+        .filter-section h3 {
+            margin-bottom: 16px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-controls select,
+        .filter-controls button {
+            padding: 10px 16px;
+            border: 1.5px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .filter-controls select {
+            background: white;
+            cursor: pointer;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .filter-controls select:hover,
+        .filter-controls select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .filter-controls button {
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .filter-controls button:hover {
+            background: #5568d3;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .footer {
+            background: #f5f5f5;
+            padding: 25px;
+            text-align: center;
+            color: #666;
+            font-size: 0.85em;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer p {
+            margin: 4px 0;
+        }
+
+        .footer p:first-child {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 30px;
+            color: #999;
+        }
+
+        .empty-state h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+
+        .empty-state p {
+            font-size: 0.95em;
+        }
+
+        .validation-note {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border-left: 4px solid #667eea;
+            padding: 16px;
+            margin: 20px 0;
+            border-radius: 6px;
+            color: #1565c0;
+            font-weight: 500;
+        }
+
+        .validation-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin: 25px 0;
+        }
+
+        .validation-stat-box {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 18px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .validation-stat-box:hover {
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .validation-stat-box strong {
+            display: block;
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .validation-stat-box span {
+            font-size: 0.85em;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .status-ok {
+            background: #d4edda;
+            color: #155724;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        input[type="checkbox"] {
+            cursor: pointer;
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+        }
+
+        .validation-row.validated {
+            background: #f0f8f0;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .card .data-table {
+            margin: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 35px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header p {
+                font-size: 0.9em;
+            }
+
+            .tab-content {
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-controls {
+                flex-direction: column;
+            }
+
+            .filter-controls select,
+            .filter-controls button {
+                width: 100%;
+            }
+
+            .data-table {
+                font-size: 0.85em;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>A Academia - Análise Financeira</h1>
+            <p>Reconciliação: REAL (Entrada - Planilha) vs APURADO (Faturamento - PDF)</p>
+            <p id="periodo">Período: Agosto 2025 - Agosto 2026</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">📊 REAL: Jan/26 - Ago/26 | APURADO: Ago/25 - Jul/26 | Período de correlação: Jan/26 - Jul/26</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab(event, 'resumo')">Resumo</button>
+            <button class="tab-button" onclick="showTab(event, 'unidades')">Por Unidade</button>
+            <button class="tab-button" onclick="showTab(event, 'dados-raw')">Dados Brutos</button>
+            <button class="tab-button" onclick="showTab(event, 'validacao')">Validação</button>
+        </div>
+
+        <!-- TAB RESUMO -->
+        <div id="resumo" class="tab-content active">
+            <h2>Resumo Executivo</h2>
+            <div class="filter-section">
+                <h3>Filtrar Dados</h3>
+                <div class="filter-controls">
+                    <select id="filter-resumo-unidade" onchange="aplicarFiltroResumo()">
+                        <option value="">Todas as Unidades</option>
+                    </select>
+                    <select id="filter-resumo-mes" onchange="aplicarFiltroResumo()">
+                        <option value="">Todos os Meses</option>
+                    </select>
+                    <button onclick="limparFiltroResumo()">Limpar Filtros</button>
+                </div>
+            </div>
+            <div class="stats-grid" id="stats-resumo">
+                <div class="stat-card">
+                    <div class="stat-label">TOTAL REAL</div>
+                    <div class="stat-value">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">TOTAL APURADO</div>
+                    <div class="stat-value">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">DIFERENÇA</div>
+                    <div class="stat-value">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">VARIAÇÃO %</div>
+                    <div class="stat-value">-</div>
+                </div>
+            </div>
+            <div class="empty-state">
+                <h3>📊 Nenhum dado carregado</h3>
+                <p>Prepare as planilhas e carregue os dados</p>
+            </div>
+            <table class="data-table" id="table-resumo" style="display: none;">
+                <thead>
+                    <tr>
+                        <th style="text-align: left;">Unidade</th>
+                        <th style="text-align: right;">REAL (R$)</th>
+                        <th style="text-align: right;">APURADO (R$)</th>
+                        <th style="text-align: right;">Diferença (R$)</th>
+                        <th style="text-align: right;">Variação %</th>
+                    </tr>
+                </thead>
+                <tbody id="table-resumo-body"></tbody>
+            </table>
+        </div>
+
+        <!-- TAB UNIDADES -->
+        <div id="unidades" class="tab-content">
+            <h2>Análise Detalhada por Unidade</h2>
+            <div class="filter-section">
+                <h3>Filtrar Dados</h3>
+                <div class="filter-controls">
+                    <select id="filter-unidades-mes" onchange="aplicarFiltroUnidades()">
+                        <option value="">Todos os Meses</option>
+                    </select>
+                    <button onclick="limparFiltroUnidades()">Limpar Filtros</button>
+                </div>
+            </div>
+            <div id="unidades-content" class="empty-state">
+                <h3>📋 Nenhum dado carregado</h3>
+            </div>
+        </div>
+
+        <!-- TAB DADOS BRUTOS -->
+        <div id="dados-raw" class="tab-content">
+            <h2>Dados Brutos - Filtráveis</h2>
+            <div class="filter-section">
+                <h3>Filtrar Dados</h3>
+                <div class="filter-controls">
+                    <select id="filter-unidade" onchange="aplicarFiltro()">
+                        <option value="">Todas as Unidades</option>
+                    </select>
+                    <select id="filter-mes" onchange="aplicarFiltro()">
+                        <option value="">Todos os Meses</option>
+                    </select>
+                    <button onclick="limparFiltro()">Limpar Filtros</button>
+                </div>
+            </div>
+            <div class="empty-state">
+                <h3>📊 Nenhum dado carregado</h3>
+            </div>
+            <table class="data-table" id="dados-table" style="display: none;">
+                <thead>
+                    <tr>
+                        <th style="text-align: left;">Unidade</th>
+                        <th style="text-align: left;">Mês</th>
+                        <th style="text-align: right;">REAL (R$)</th>
+                        <th style="text-align: right;">APURADO (R$)</th>
+                        <th style="text-align: right;">Diferença (R$)</th>
+                        <th style="text-align: right;">Var %</th>
+                    </tr>
+                </thead>
+                <tbody id="dados-tbody"></tbody>
+            </table>
+        </div>
+
+        <!-- TAB VALIDAÇÃO -->
+        <div id="validacao" class="tab-content">
+            <h2>Validação de Dados</h2>
+            <div class="validation-note">
+                ✓ Marque cada linha como validada após conferir nos arquivos originais
+            </div>
+            <div class="validation-stats">
+                <div class="validation-stat-box">
+                    <strong id="stats-total">-</strong>
+                    <span>Total</span>
+                </div>
+                <div class="validation-stat-box">
+                    <strong id="stats-validadas">-</strong>
+                    <span>Validadas</span>
+                </div>
+                <div class="validation-stat-box">
+                    <strong id="stats-pendentes">-</strong>
+                    <span>Pendentes</span>
+                </div>
+                <div class="validation-stat-box">
+                    <strong id="stats-percentual">-</strong>
+                    <span>Conclusão</span>
+                </div>
+            </div>
+            <div class="filter-section">
+                <h3>Filtrar e Ações</h3>
+                <div class="filter-controls">
+                    <select id="filter-validacao-unidade" onchange="aplicarFiltroValidacao()">
+                        <option value="">Todas as Unidades</option>
+                    </select>
+                    <select id="filter-validacao-mes" onchange="aplicarFiltroValidacao()">
+                        <option value="">Todos os Meses</option>
+                    </select>
+                    <select id="filter-status" onchange="aplicarFiltroValidacao()">
+                        <option value="">Todos os Status</option>
+                        <option value="pendente">Pendentes</option>
+                        <option value="validado">Validados</option>
+                    </select>
+                    <button onclick="validarTodos()">✓ Validar Todos</button>
+                    <button onclick="limparValidacoes()">✗ Limpar</button>
+                    <button onclick="exportarRelatorio()">📥 Exportar</button>
+                </div>
+            </div>
+            <div class="empty-state">
+                <h3>📋 Nenhum dado carregado</h3>
+            </div>
+            <table class="data-table" id="validation-table" style="display: none;">
+                <thead>
+                    <tr>
+                        <th style="width: 50px; text-align: center;">✓</th>
+                        <th style="text-align: left;">Unidade</th>
+                        <th style="text-align: left;">Mês</th>
+                        <th style="text-align: left;">Tipo</th>
+                        <th style="text-align: right;">Valor (R$)</th>
+                        <th style="text-align: left;">Fonte</th>
+                        <th style="text-align: left;">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="validation-tbody"></tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>Análise Financeira - A Academia</p>
+            <p id="footer-info">✓ Dados APURADO Carregados | 5 Unidades × 12 Meses | Total: R$ 13.944.065,43</p>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // DADOS REAL - JAN/26 A AGO/26 (pós-deduções de vendas avulsas)
+        // ========================================
+        const dados_real = {
+            "Nova Campinas": {"Jan/26": 291969, "Fev/26": 326306, "Mar/26": 486290, "Abr/26": 314350.5, "Mai/26": 304969, "Jun/26": 218580, "Jul/26": 272862, "Ago/26": 352177},
+            "Taquaral": {"Jan/26": 159487.99, "Fev/26": 68270, "Mar/26": 173376, "Abr/26": 151263, "Mai/26": 147130.1, "Jun/26": 106498, "Jul/26": 122687, "Ago/26": 130479},
+            "A Paulinia": {"Jan/26": 54351, "Fev/26": 34316, "Mar/26": 62626, "Abr/26": 33009, "Mai/26": 44071, "Jun/26": 38428, "Jul/26": 19792, "Ago/26": 61746.5},
+            "A Cambuí": {"Jan/26": 356562, "Fev/26": 325078.2, "Mar/26": 314193, "Abr/26": 366764.3, "Mai/26": 303849.35, "Jun/26": 241569, "Jul/26": 298261, "Ago/26": 281379},
+            "A Sousas": {"Jan/26": 100178, "Fev/26": 96439, "Mar/26": 113396, "Abr/26": 85232, "Mai/26": 85894, "Jun/26": 42969, "Jul/26": 69287, "Ago/26": 107328}
+        };
+
+        // ========================================
+        // DADOS APURADO - AGO/25 A JUL/26
+        // ========================================
+        const dados_apurado = {
+            "A Nova Campinas": {"Ago/25": 440750.1, "Set/25": 445826, "Out/25": 471789.15, "Nov/25": 489563.2, "Dez/25": 460751.2, "Jan/26": 471199.35, "Fev/26": 459030.3, "Mar/26": 560847.8, "Abr/26": 455096.33, "Mai/26": 462881.9, "Jun/26": 382643, "Jul/26": 434755.1},
+            "A Paulinia": {"Ago/25": 43620, "Set/25": 57585, "Out/25": 68544.6, "Nov/25": 134421, "Dez/25": 45639, "Jan/26": 64351, "Fev/26": 44184, "Mar/26": 73156.3, "Abr/26": 41047.1, "Mai/26": 49565.55, "Jun/26": 43477, "Jul/26": 29901},
+            "Taquaral": {"Ago/25": 94111.65, "Set/25": 155931.8, "Out/25": 221286.4, "Nov/25": 322534.3, "Dez/25": 92743.9, "Jan/26": 180740.7, "Fev/26": 100007.6, "Mar/26": 185464.9, "Abr/26": 160468.6, "Mai/26": 166662.9, "Jun/26": 130693.8, "Jul/26": 127241.45},
+            "A Sousas": {"Ago/25": 86832.6, "Set/25": 99915.7, "Out/25": 87628, "Nov/25": 202143.6, "Dez/25": 84557, "Jan/26": 111014, "Fev/26": 108052, "Mar/26": 124345, "Abr/26": 99154.5, "Mai/26": 97107, "Jun/26": 59649, "Jul/26": 79287},
+            "A Cambuí": {"Ago/25": 387350.8, "Set/25": 382710.25, "Out/25": 399520.75, "Nov/25": 410652.9, "Dez/25": 378222.6, "Jan/26": 398550.1, "Fev/26": 359410.8, "Mar/26": 371889.2, "Abr/26": 382670.9, "Mai/26": 390299.75, "Jun/26": 317024, "Jul/26": 357565}
+        };
+
+        // Mapear nomes para manter consistência
+        const unidades = ["Nova Campinas", "A Cambuí", "Taquaral", "A Sousas", "A Paulinia"];
+        let validacoes = {};
+        const meses = ["Ago/25", "Set/25", "Out/25", "Nov/25", "Dez/25", "Jan/26", "Fev/26", "Mar/26", "Abr/26", "Mai/26", "Jun/26", "Jul/26", "Ago/26"];
+
+        // Normalizar nomes entre dados_real e dados_apurado
+        const dados_real_normalized = {
+            "A Nova Campinas": dados_real["Nova Campinas"],
+            "A Cambuí": dados_real["A Cambuí"],
+            "Taquaral": dados_real["Taquaral"],
+            "A Sousas": dados_real["A Sousas"],
+            "A Paulinia": dados_real["A Paulinia"]
+        };
+
+        const unidades_display = ["A Nova Campinas", "A Cambuí", "Taquaral", "A Sousas", "A Paulinia"];
+
+        function showTab(evt, tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function populateUnidades() {
+            const container = document.getElementById('unidades-content');
+            if (unidades_display.length === 0) {
+                container.innerHTML = '<div class="empty-state"><h3>📋 Nenhum dado</h3></div>';
+                return;
+            }
+            let html = '';
+            unidades_display.forEach(u => {
+                const tr = Object.values(dados_real_normalized[u] || {}).reduce((a,b) => a+b, 0);
+                const ta = Object.values(dados_apurado[u] || {}).reduce((a,b) => a+b, 0);
+                html += `<div class="card"><h3>${u}</h3><table class="data-table"><thead><tr><th>Mês</th><th class="text-right">REAL</th><th class="text-right">APURADO</th><th class="text-right">Diferença</th></tr></thead><tbody>`;
+                meses.forEach(m => {
+                    const r = dados_real_normalized[u]?.[m] || 0;
+                    const a = dados_apurado[u]?.[m] || 0;
+                    const diff = r - a;
+                    const diff_str = diff !== 0 ? (diff > 0 ? '+' : '') + diff.toLocaleString('pt-BR', {maximumFractionDigits: 2}) : '-';
+                    html += `<tr><td>${m}</td><td class="text-right">${r.toLocaleString('pt-BR', {maximumFractionDigits: 2})}</td><td class="text-right">${a.toLocaleString('pt-BR', {maximumFractionDigits: 2})}</td><td class="text-right">${diff_str}</td></tr>`;
+                });
+                html += `</tbody></table></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function populateDadosBrutos() {
+            if (unidades_display.length === 0) {
+                document.getElementById('dados-table').style.display = 'none';
+                return;
+            }
+            const tbody = document.getElementById('dados-tbody');
+            let html = '';
+            unidades_display.forEach(u => {
+                meses.forEach(m => {
+                    const r = dados_real_normalized[u]?.[m] || 0;
+                    const a = dados_apurado[u]?.[m] || 0;
+
+                    // Mostrar linha se houver REAL ou APURADO
+                    if (r > 0 || a > 0) {
+                        const diff = r - a;
+                        const var_pct = a > 0 ? ((diff / a) * 100).toFixed(2) : (r > 0 ? 100 : 0);
+                        const diff_str = diff !== 0 ? (diff > 0 ? '+' : '') + diff.toLocaleString('pt-BR', {maximumFractionDigits: 2}) : '-';
+
+                        html += `<tr>
+                            <td>${u}</td>
+                            <td>${m}</td>
+                            <td class="text-right">${r > 0 ? r.toLocaleString('pt-BR', {maximumFractionDigits: 2}) : '-'}</td>
+                            <td class="text-right">${a > 0 ? a.toLocaleString('pt-BR', {maximumFractionDigits: 2}) : '-'}</td>
+                            <td class="text-right">${diff_str}</td>
+                            <td class="text-right">${var_pct}%</td>
+                        </tr>`;
+                    }
+                });
+            });
+            tbody.innerHTML = html;
+            document.getElementById('dados-table').style.display = html ? 'table' : 'none';
+        }
+
+        function populateValidacao() {
+            if (unidades_display.length === 0) {
+                document.getElementById('validation-table').style.display = 'none';
+                return;
+            }
+            const tbody = document.getElementById('validation-tbody');
+            let html = '';
+            unidades_display.forEach(u => {
+                meses.forEach(m => {
+                    ['REAL', 'APURADO'].forEach(t => {
+                        const id = `${u}_${m}_${t}`;
+                        const val = t === 'REAL' ? dados_real_normalized[u]?.[m] : dados_apurado[u]?.[m];
+                        if (val > 0) {
+                            const checked = validacoes[id] || false;
+                            html += `<tr class="${checked ? 'validated' : ''}"><td><input type="checkbox" id="check-${id}" ${checked ? 'checked' : ''} onchange="toggleValidacao('${id}')"></td><td>${u}</td><td>${m}</td><td>${t}</td><td class="text-right">${val.toLocaleString('pt-BR', {maximumFractionDigits: 2})}</td><td>${t === 'REAL' ? 'Planilha' : 'PDF'}</td><td><span class="${checked ? 'status-ok' : 'status-warning'}">${checked ? 'Validado' : 'Pendente'}</span></td></tr>`;
+                        }
+                    });
+                });
+            });
+            tbody.innerHTML = html;
+            document.getElementById('validation-table').style.display = html ? 'table' : 'none';
+            atualizarStats();
+        }
+
+        function toggleValidacao(id) {
+            validacoes[id] = !validacoes[id];
+            document.getElementById(`check-${id}`).checked = validacoes[id];
+            document.getElementById(`check-${id}`).closest('tr').classList.toggle('validated');
+            atualizarStats();
+        }
+
+        function validarTodos() {
+            document.querySelectorAll('#validation-tbody input').forEach(cb => {
+                const id = cb.id.replace('check-', '');
+                validacoes[id] = true;
+                cb.checked = true;
+                cb.closest('tr').classList.add('validated');
+            });
+            atualizarStats();
+        }
+
+        function limparValidacoes() {
+            validacoes = {};
+            document.querySelectorAll('#validation-tbody input').forEach(cb => cb.checked = false);
+            document.querySelectorAll('#validation-tbody tr').forEach(tr => tr.classList.remove('validated'));
+            atualizarStats();
+        }
+
+        function atualizarStats() {
+            const total = Object.keys(validacoes).length;
+            const val = Object.values(validacoes).filter(v => v).length;
+            document.getElementById('stats-total').textContent = total || '-';
+            document.getElementById('stats-validadas').textContent = val || '-';
+            document.getElementById('stats-pendentes').textContent = (total - val) || '-';
+            document.getElementById('stats-percentual').textContent = total ? Math.round((val/total)*100) + '%' : '-';
+        }
+
+        function aplicarFiltro() {
+            const filtroUnidade = document.getElementById('filter-unidade').value;
+            const filtroMes = document.getElementById('filter-mes').value;
+
+            const tbody = document.getElementById('dados-tbody');
+            const linhas = tbody.querySelectorAll('tr');
+
+            linhas.forEach(linha => {
+                const unidade = linha.cells[0].textContent;
+                const mes = linha.cells[1].textContent;
+
+                const matchUnidade = !filtroUnidade || unidade === filtroUnidade;
+                const matchMes = !filtroMes || mes === filtroMes;
+
+                linha.style.display = (matchUnidade && matchMes) ? 'table-row' : 'none';
+            });
+        }
+
+        function limparFiltro() {
+            document.getElementById('filter-unidade').value = '';
+            document.getElementById('filter-mes').value = '';
+            aplicarFiltro();
+        }
+
+        function aplicarFiltroValidacao() {
+            const filtroUnidade = document.getElementById('filter-validacao-unidade').value;
+            const filtroMes = document.getElementById('filter-validacao-mes').value;
+            const filtroStatus = document.getElementById('filter-status').value;
+
+            const tbody = document.getElementById('validation-tbody');
+            const linhas = tbody.querySelectorAll('tr');
+
+            linhas.forEach(linha => {
+                const unidade = linha.cells[1].textContent;
+                const mes = linha.cells[2].textContent;
+                const status = linha.querySelector('span').textContent;
+
+                const matchUnidade = !filtroUnidade || unidade === filtroUnidade;
+                const matchMes = !filtroMes || mes === filtroMes;
+                const matchStatus = !filtroStatus || (filtroStatus === 'validado' && status === 'Validado') || (filtroStatus === 'pendente' && status === 'Pendente');
+
+                linha.style.display = (matchUnidade && matchMes && matchStatus) ? 'table-row' : 'none';
+            });
+        }
+
+        function aplicarFiltroResumo() {
+            const filtroUnidade = document.getElementById('filter-resumo-unidade').value;
+            const filtroMes = document.getElementById('filter-resumo-mes').value;
+
+            // Se tem filtro de mês, precisa regenerar a tabela com apenas aquele mês
+            if (filtroMes) {
+                const tbody = document.getElementById('table-resumo-body');
+                let html = '';
+
+                unidades_display.forEach(u => {
+                    const tr = Object.values(dados_real_normalized[u] || {}).reduce((a,b) => a+b, 0);
+                    const ta = Object.values(dados_apurado[u] || {}).reduce((a,b) => a+b, 0);
+
+                    // Mostrar apenas se a unidade passa no filtro
+                    if (!filtroUnidade || u === filtroUnidade) {
+                        // Pegar valores específicos do mês
+                        const r = dados_real_normalized[u]?.[filtroMes] || 0;
+                        const a = dados_apurado[u]?.[filtroMes] || 0;
+                        const diff = r - a;
+                        const diff_pct = a > 0 ? ((diff / a) * 100).toFixed(2) : (r > 0 ? 100 : 0);
+
+                        html += `<tr><td>${u}</td><td class="text-right">${r.toLocaleString('pt-BR', {maximumFractionDigits: 2})}</td><td class="text-right">${a.toLocaleString('pt-BR', {maximumFractionDigits: 2})}</td><td class="text-right">${(diff > 0 ? '+' : '') + diff.toLocaleString('pt-BR', {maximumFractionDigits: 2})}</td><td class="text-right">${diff_pct}%</td></tr>`;
+                    }
+                });
+
+                tbody.innerHTML = html;
+                document.getElementById('table-resumo').style.display = html ? 'table' : 'none';
+            } else {
+                // Sem filtro de mês, mostrar totalizações
+                const tbody = document.getElementById('table-resumo-body');
+                let html = '';
+
+                unidades_display.forEach(u => {
+                    const tr = Object.values(dados_real_normalized[u] || {}).reduce((a,b) => a+b, 0);
+                    const ta = Object.values(dados_apurado[u] || {}).reduce((a,b) => a+b, 0);
+
+                    if (!filtroUnidade || u === filtroUnidade) {
+                        const tdiff = tr - ta;
+                        const tpct = ta ? ((tdiff / ta) * 100).toFixed(2) : 0;
+                        html += `<tr><td>${u}</td><td class="text-right">${tr.toLocaleString('pt-BR', {maximumFractionDigits: 2})}</td><td class="text-right">${ta.toLocaleString('pt-BR', {maximumFractionDigits: 2})}</td><td class="text-right">${(tdiff > 0 ? '+' : '') + tdiff.toLocaleString('pt-BR', {maximumFractionDigits: 2})}</td><td class="text-right">${tpct}%</td></tr>`;
+                    }
+                });
+
+                tbody.innerHTML = html;
+                document.getElementById('table-resumo').style.display = html ? 'table' : 'none';
+            }
+        }
+
+        function limparFiltroResumo() {
+            document.getElementById('filter-resumo-unidade').value = '';
+            document.getElementById('filter-resumo-mes').value = '';
+            aplicarFiltroResumo();
+        }
+
+        function aplicarFiltroUnidades() {
+            const filtroMes = document.getElementById('filter-unidades-mes').value;
+            const cards = document.querySelectorAll('#unidades-content .card');
+
+            cards.forEach(card => {
+                const tabelas = card.querySelectorAll('tbody tr');
+                let temLinhaVisivel = false;
+
+                tabelas.forEach(linha => {
+                    const mes = linha.cells[0].textContent;
+                    const mostrar = !filtroMes || mes === filtroMes;
+                    linha.style.display = mostrar ? 'table-row' : 'none';
+                    if (mostrar) temLinhaVisivel = true;
+                });
+
+                card.style.display = temLinhaVisivel ? 'block' : 'none';
+            });
+        }
+
+        function limparFiltroUnidades() {
+            document.getElementById('filter-unidades-mes').value = '';
+            document.querySelectorAll('#unidades-content .card').forEach(c => c.style.display = 'block');
+            document.querySelectorAll('#unidades-content tbody tr').forEach(l => l.style.display = 'table-row');
+        }
+
+        function exportarRelatorio() {
+            const total = Object.keys(validacoes).length;
+            const val = Object.values(validacoes).filter(v => v).length;
+            const pct = total ? Math.round((val/total)*100) : 0;
+            alert(`📊 Relatório de Validação\n\nTotal de linhas: ${total}\nValidadas: ${val}\nPendentes: ${total - val}\nConclusão: ${pct}%`);
+        }
+
+        function populateResumo() {
+            let totalReal = 0, totalApurado = 0;
+
+            unidades_display.forEach(u => {
+                Object.values(dados_real_normalized[u] || {}).forEach(v => totalReal += v);
+                Object.values(dados_apurado[u] || {}).forEach(v => totalApurado += v);
+            });
+
+            const diff = totalReal - totalApurado;
+            const pct = totalApurado ? ((diff / totalApurado) * 100).toFixed(2) : 0;
+
+            const statsGrid = document.getElementById('stats-resumo');
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">TOTAL REAL</div>
+                    <div class="stat-value">R$ ${(totalReal/1000).toFixed(1)}k</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">TOTAL APURADO</div>
+                    <div class="stat-value">R$ ${(totalApurado/1000).toFixed(1)}k</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">DIFERENÇA</div>
+                    <div class="stat-value">R$ ${(diff/1000).toFixed(1)}k</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">VARIAÇÃO %</div>
+                    <div class="stat-value">${pct}%</div>
+                </div>
+            `;
+
+            // Tabela resumo por unidade
+            let html = '';
+            unidades_display.forEach(u => {
+                const tr = Object.values(dados_real_normalized[u] || {}).reduce((a,b) => a+b, 0);
+                const ta = Object.values(dados_apurado[u] || {}).reduce((a,b) => a+b, 0);
+                const tdiff = tr - ta;
+                const tpct = ta ? ((tdiff / ta) * 100).toFixed(2) : 0;
+                html += `<tr><td>${u}</td><td class="text-right">${tr.toLocaleString('pt-BR', {maximumFractionDigits: 2})}</td><td class="text-right">${ta.toLocaleString('pt-BR', {maximumFractionDigits: 2})}</td><td class="text-right">${tdiff.toLocaleString('pt-BR', {maximumFractionDigits: 2})}</td><td class="text-right">${tpct}%</td></tr>`;
+            });
+            document.getElementById('table-resumo-body').innerHTML = html;
+            document.getElementById('table-resumo').style.display = 'table';
+            document.querySelectorAll('#resumo .empty-state').forEach(el => el.style.display = 'none');
+        }
+
+        // Inicializar filtros
+        function initFilters() {
+            // Dados Brutos
+            const selectUnidade = document.getElementById('filter-unidade');
+            const selectMes = document.getElementById('filter-mes');
+
+            unidades_display.forEach(u => {
+                const opt = document.createElement('option');
+                opt.value = u;
+                opt.textContent = u;
+                selectUnidade.appendChild(opt);
+            });
+
+            meses.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.textContent = m;
+                selectMes.appendChild(opt);
+            });
+
+            // Resumo
+            const selectResumoUnidade = document.getElementById('filter-resumo-unidade');
+            const selectResumoMes = document.getElementById('filter-resumo-mes');
+
+            unidades_display.forEach(u => {
+                const opt = document.createElement('option');
+                opt.value = u;
+                opt.textContent = u;
+                selectResumoUnidade.appendChild(opt);
+            });
+
+            meses.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.textContent = m;
+                selectResumoMes.appendChild(opt);
+            });
+
+            // Unidades
+            const selectUnidadesMes = document.getElementById('filter-unidades-mes');
+            meses.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.textContent = m;
+                selectUnidadesMes.appendChild(opt);
+            });
+
+            // Validação
+            const selectValidacaoUnidade = document.getElementById('filter-validacao-unidade');
+            const selectValidacaoMes = document.getElementById('filter-validacao-mes');
+
+            unidades_display.forEach(u => {
+                const opt = document.createElement('option');
+                opt.value = u;
+                opt.textContent = u;
+                selectValidacaoUnidade.appendChild(opt);
+            });
+
+            meses.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.textContent = m;
+                selectValidacaoMes.appendChild(opt);
+            });
+        }
+
+        // Inicializar ao carregar
+        window.addEventListener('load', () => {
+            initFilters();
+            populateResumo();
+            populateUnidades();
+            populateDadosBrutos();
+            populateValidacao();
+
+            const totalLinhas = document.querySelectorAll('#validation-tbody tr').length;
+            document.getElementById('footer-info').textContent = `✓ Dados REAL e APURADO Carregados | ${unidades_display.length} Unidades × ${meses.length} Meses | ${totalLinhas} Linhas para validação`;
+
+            console.log('Dashboard atualizado com dados REAL (Jan-Ago/26) e APURADO (Ago/25-Jul/26)');
+        });
+    </script>
+</body>
+</html>
+</body></html>

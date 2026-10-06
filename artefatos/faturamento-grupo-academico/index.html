@@ -1,0 +1,440 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise de Faturamento - Grupo Acadêmico</title>
+    <style>
+        :root {
+            --color-nova-campinas: #2563eb;
+            --color-cambui: #059669;
+            --color-arr: #ea580c;
+            --color-sousas: #dc2626;
+            --color-paulinia: #7c3aed;
+
+            --surface-light: #ffffff;
+            --surface-dark: #1f2937;
+            --text-primary-light: #111827;
+            --text-primary-dark: #f3f4f6;
+            --text-secondary-light: #6b7280;
+            --text-secondary-dark: #9ca3af;
+            --border-light: #e5e7eb;
+            --border-dark: #374151;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: var(--surface-dark);
+                color: var(--text-primary-dark);
+            }
+            .card {
+                background-color: #111827;
+                border-color: var(--border-dark);
+            }
+            .chart-title {
+                color: var(--text-primary-dark);
+            }
+            .axis-label {
+                fill: var(--text-secondary-dark);
+            }
+            .value-label {
+                fill: var(--text-primary-dark);
+            }
+            .grid-line {
+                stroke: var(--border-dark);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            body {
+                background-color: #f9fafb;
+                color: var(--text-primary-light);
+            }
+            .card {
+                background-color: var(--surface-light);
+                border-color: var(--border-light);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            padding: 2rem 1rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary-light);
+            margin-bottom: 2rem;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .subtitle {
+                color: var(--text-secondary-dark);
+            }
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            border: 1px solid var(--border-light);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: box-shadow 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary-light);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .card-label {
+                color: var(--text-secondary-dark);
+            }
+        }
+
+        .chart-container {
+            background-color: var(--surface-light);
+            border: 1px solid var(--border-light);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .chart-container {
+                background-color: #111827;
+                border-color: var(--border-dark);
+            }
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary-light);
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+        }
+
+        .bar-group {
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .bar-group:hover rect {
+            opacity: 0.8;
+        }
+
+        .bar-group:hover .value-label {
+            font-weight: 700;
+        }
+
+        .axis-label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .value-label {
+            font-size: 13px;
+            font-weight: 600;
+            dominant-baseline: middle;
+        }
+
+        .percentage-label {
+            font-size: 12px;
+            font-weight: 500;
+            fill: var(--text-secondary-light);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .percentage-label {
+                fill: var(--text-secondary-dark);
+            }
+        }
+
+        .grid-line {
+            stroke: var(--border-light);
+            stroke-width: 1;
+            stroke-dasharray: 4,4;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .legend {
+                border-top-color: var(--border-dark);
+            }
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat {
+            background-color: var(--surface-light);
+            border: 1px solid var(--border-light);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .stat {
+                background-color: #111827;
+                border-color: var(--border-dark);
+            }
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-nova-campinas);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary-light);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .stat-label {
+                color: var(--text-secondary-dark);
+            }
+        }
+
+        .duopoly-highlight {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+            border: 2px solid var(--border-light);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .duopoly-highlight {
+                background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);
+                border-color: var(--border-dark);
+            }
+        }
+
+        .duopoly-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--color-nova-campinas);
+        }
+
+        .duopoly-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary-light);
+            margin-top: 0.5rem;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .duopoly-label {
+                color: var(--text-secondary-dark);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Análise de Faturamento</h1>
+            <p class="subtitle">Período: Agosto/2025 - Julho/2026 | Grupo Econômico Consolidado</p>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-value">R$ 13,79M</div>
+                <div class="card-label">Faturamento Total</div>
+            </div>
+            <div class="card">
+                <div class="card-value">R$ 1,15M</div>
+                <div class="card-label">Média Mensal</div>
+            </div>
+            <div class="card">
+                <div class="card-value">5</div>
+                <div class="card-label">Unidades Operacionais</div>
+            </div>
+        </div>
+
+        <div class="duopoly-highlight">
+            <div class="duopoly-value">74,40%</div>
+            <div class="duopoly-label">Nova Campinas + Cambuí | R$ 10,25M em faturamento</div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">Faturamento por Unidade (12 meses)</div>
+            <svg viewBox="0 0 1000 450" xmlns="http://www.w3.org/2000/svg">
+                <!-- Grid lines -->
+                <line x1="150" y1="30" x2="150" y2="400" class="grid-line" stroke="#d1d5db"/>
+                <line x1="150" y1="400" x2="950" y2="400" class="grid-line" stroke="#d1d5db"/>
+
+                <!-- Vertical grid lines for scale -->
+                <line x1="300" y1="30" x2="300" y2="400" class="grid-line" stroke="#e5e7eb" opacity="0.5"/>
+                <line x1="450" y1="30" x2="450" y2="400" class="grid-line" stroke="#e5e7eb" opacity="0.5"/>
+                <line x1="600" y1="30" x2="600" y2="400" class="grid-line" stroke="#e5e7eb" opacity="0.5"/>
+                <line x1="750" y1="30" x2="750" y2="400" class="grid-line" stroke="#e5e7eb" opacity="0.5"/>
+                <line x1="900" y1="30" x2="900" y2="400" class="grid-line" stroke="#e5e7eb" opacity="0.5"/>
+
+                <!-- Scale labels -->
+                <text x="150" y="420" text-anchor="middle" class="axis-label">R$ 0</text>
+                <text x="300" y="420" text-anchor="middle" class="axis-label">R$ 2M</text>
+                <text x="450" y="420" text-anchor="middle" class="axis-label">R$ 4M</text>
+                <text x="600" y="420" text-anchor="middle" class="axis-label">R$ 6M</text>
+                <text x="750" y="420" text-anchor="middle" class="axis-label">R$ 8M</text>
+                <text x="900" y="420" text-anchor="middle" class="axis-label">R$ 10M</text>
+
+                <!-- Bar 1: A Nova Campinas (R$ 5.666.113,43) -->
+                <g class="bar-group">
+                    <rect x="150" y="50" width="755" height="55" fill="var(--color-nova-campinas)" rx="4"/>
+                    <text x="920" y="78" class="value-label" text-anchor="start">R$ 5,67M</text>
+                    <text x="920" y="95" class="percentage-label" text-anchor="start">41,12%</text>
+                    <text x="120" y="78" class="axis-label" text-anchor="end">A Nova Campinas</text>
+                </g>
+
+                <!-- Bar 2: A Cambuí (R$ 4.585.867,85) -->
+                <g class="bar-group">
+                    <rect x="150" y="125" width="613" height="55" fill="var(--color-cambui)" rx="4"/>
+                    <text x="920" y="153" class="value-label" text-anchor="start">R$ 4,59M</text>
+                    <text x="920" y="170" class="percentage-label" text-anchor="start">33,28%</text>
+                    <text x="120" y="153" class="axis-label" text-anchor="end">A Cambuí</text>
+                </g>
+
+                <!-- Bar 3: Taquaral (R$ 1.939.767,60) -->
+                <g class="bar-group">
+                    <rect x="150" y="200" width="259" height="55" fill="var(--color-arr)" rx="4"/>
+                    <text x="920" y="228" class="value-label" text-anchor="start">R$ 1,94M</text>
+                    <text x="920" y="245" class="percentage-label" text-anchor="start">14,07%</text>
+                    <text x="120" y="228" class="axis-label" text-anchor="end">Taquaral</text>
+                </g>
+
+                <!-- Bar 4: A Sousas (R$ 1.239.686,40) -->
+                <g class="bar-group">
+                    <rect x="150" y="275" width="166" height="55" fill="var(--color-sousas)" rx="4"/>
+                    <text x="920" y="303" class="value-label" text-anchor="start">R$ 1,24M</text>
+                    <text x="920" y="320" class="percentage-label" text-anchor="start">8,99%</text>
+                    <text x="120" y="303" class="axis-label" text-anchor="end">A Sousas</text>
+                </g>
+
+                <!-- Bar 5: A Paulinia (R$ 715.492,55) -->
+                <g class="bar-group">
+                    <rect x="150" y="350" width="96" height="55" fill="var(--color-paulinia)" rx="4"/>
+                    <text x="920" y="378" class="value-label" text-anchor="start">R$ 0,72M</text>
+                    <text x="920" y="395" class="percentage-label" text-anchor="start">5,19%</text>
+                    <text x="120" y="378" class="axis-label" text-anchor="end">A Paulinia</text>
+                </g>
+            </svg>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: var(--color-nova-campinas)"></div>
+                    <span>A Nova Campinas (RR2 + 3R Apoio)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: var(--color-cambui)"></div>
+                    <span>A Cambuí (RCR3)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: var(--color-arr)"></div>
+                    <span>Taquaral (Taquaral + Taquaral 2)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: var(--color-sousas)"></div>
+                    <span>A Sousas (RC Sousas)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: var(--color-paulinia)"></div>
+                    <span>A Paulinia (Academia Templo)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">R$ 472,18k</div>
+                <div class="stat-label">Média Mensal - A Nova Campinas</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">R$ 382,16k</div>
+                <div class="stat-label">Média Mensal - A Cambuí</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">6,39x</div>
+                <div class="stat-label">Proporção (Nova Campinas / Paulinia)</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">R$ 10,25M</div>
+                <div class="stat-label">Duopólio Consolidado</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+</body></html>

@@ -1,0 +1,796 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise de Faturamento - Interativa</title>
+    <style>
+        :root {
+            --color-rr2: #2563eb;
+            --color-3r: #1e40af;
+            --color-rcr3: #059669;
+            --color-arr-apoio: #ea580c;
+            --color-arr-ativ: #b45309;
+            --color-sousas: #dc2626;
+            --color-paulinia: #7c3aed;
+
+            --surface-light: #ffffff;
+            --surface-dark: #1f2937;
+            --text-primary-light: #111827;
+            --text-primary-dark: #f3f4f6;
+            --text-secondary-light: #6b7280;
+            --text-secondary-dark: #9ca3af;
+            --border-light: #e5e7eb;
+            --border-dark: #374151;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: var(--surface-dark);
+                color: var(--text-primary-dark);
+            }
+            .card, .chart-container, .table-container, .toggle-group {
+                background-color: #111827;
+                border-color: var(--border-dark);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            body {
+                background-color: #f9fafb;
+                color: var(--text-primary-light);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            padding: 2rem 1rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary-light);
+            margin-bottom: 1.5rem;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .subtitle {
+                color: var(--text-secondary-dark);
+            }
+        }
+
+        .toggle-group {
+            border: 1px solid var(--border-light);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .toggle-label {
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .toggle-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .toggle-btn {
+            padding: 0.5rem 1.25rem;
+            border: 2px solid var(--border-light);
+            background-color: transparent;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            color: var(--text-primary-light);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .toggle-btn {
+                color: var(--text-primary-dark);
+                border-color: var(--border-dark);
+            }
+        }
+
+        .toggle-btn:hover {
+            background-color: var(--border-light);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .toggle-btn:hover {
+                background-color: #111827;
+            }
+        }
+
+        .toggle-btn.active {
+            background-color: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            border: 1px solid var(--border-light);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+
+        .card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary-light);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .card-label {
+                color: var(--text-secondary-dark);
+            }
+        }
+
+        .chart-container {
+            border: 1px solid var(--border-light);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            min-width: 900px;
+        }
+
+        .axis-label {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .value-label {
+            font-size: 11px;
+            font-weight: 600;
+            dominant-baseline: middle;
+        }
+
+        .percentage-label {
+            font-size: 10px;
+        }
+
+        .grid-line {
+            stroke-width: 1;
+            stroke-dasharray: 4,4;
+        }
+
+        .table-container {
+            border: 1px solid var(--border-light);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        th {
+            background-color: var(--border-light);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            th {
+                background-color: #111827;
+            }
+        }
+
+        td {
+            padding: 1rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            td {
+                border-top-color: var(--border-dark);
+            }
+        }
+
+        tr:hover {
+            background-color: var(--border-light);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            tr:hover {
+                background-color: #111827;
+            }
+        }
+
+        .unit-name {
+            font-weight: 600;
+        }
+
+        .group-label {
+            font-weight: 700;
+            background-color: var(--border-light);
+            font-size: 0.9rem;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .group-label {
+                background-color: #111827;
+            }
+        }
+
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .legend {
+                border-top-color: var(--border-dark);
+            }
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(5, 150, 105, 0.05) 100%);
+            border: 1px solid var(--border-light);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .info-box {
+                background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+                border-color: var(--border-dark);
+            }
+        }
+
+        .unit-with-tooltip {
+            position: relative;
+            cursor: help;
+            text-decoration: underline dotted;
+            text-decoration-color: var(--text-secondary-light);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .unit-with-tooltip {
+                text-decoration-color: var(--text-secondary-dark);
+            }
+        }
+
+        .tooltip {
+            visibility: hidden;
+            background-color: #111827;
+            color: #f3f4f6;
+            text-align: left;
+            border-radius: 0.375rem;
+            padding: 0.75rem 1rem;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 0;
+            white-space: nowrap;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 1px solid #374151;
+            font-weight: 500;
+        }
+
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 1rem;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #111827 transparent transparent transparent;
+        }
+
+        .unit-with-tooltip:hover .tooltip {
+            visibility: visible;
+        }
+
+        @media (prefers-color-scheme: light) {
+            .tooltip {
+                background-color: #ffffff;
+                color: #111827;
+                border-color: #e5e7eb;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .tooltip::after {
+                border-color: #ffffff transparent transparent transparent;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Análise de Faturamento</h1>
+            <p class="subtitle">Grupo Econômico | Período: Agosto/2025 - Julho/2026</p>
+        </div>
+
+        <div class="toggle-group">
+            <span class="toggle-label">Visualizar:</span>
+            <div class="toggle-buttons">
+                <button class="toggle-btn active" onclick="showView('consolidated')">
+                    5 Unidades Consolidadas
+                </button>
+                <button class="toggle-btn" onclick="showView('detailed')">
+                    7 Unidades Detalhadas
+                </button>
+            </div>
+        </div>
+
+        <!-- SEÇÃO CONSOLIDADA (5 unidades) -->
+        <div id="consolidated" class="section active">
+            <div class="info-box">
+                <strong>📌 Visão Consolidada:</strong> Agrupa as operações em 5 blocos principais (Nova Campinas, Cambuí, Taquaral, Sousas, Paulinia) para análise estratégica de cada região/cluster operacional.
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-value">R$ 13,79M</div>
+                    <div class="card-label">Faturamento Total</div>
+                </div>
+                <div class="card">
+                    <div class="card-value">5</div>
+                    <div class="card-label">Unidades Consolidadas</div>
+                </div>
+                <div class="card">
+                    <div class="card-value">74,40%</div>
+                    <div class="card-label">Duopólio (Nova Campinas + Cambuí)</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Faturamento por Cluster (12 meses)</div>
+                <svg viewBox="0 0 1000 440" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid -->
+                    <line x1="150" y1="30" x2="150" y2="380" class="grid-line" stroke="#d1d5db"/>
+                    <line x1="150" y1="380" x2="950" y2="380" class="grid-line" stroke="#d1d5db"/>
+                    <line x1="300" y1="30" x2="300" y2="380" class="grid-line" stroke="#e5e7eb" opacity="0.5"/>
+                    <line x1="450" y1="30" x2="450" y2="380" class="grid-line" stroke="#e5e7eb" opacity="0.5"/>
+                    <line x1="600" y1="30" x2="600" y2="380" class="grid-line" stroke="#e5e7eb" opacity="0.5"/>
+                    <line x1="750" y1="30" x2="750" y2="380" class="grid-line" stroke="#e5e7eb" opacity="0.5"/>
+                    <line x1="900" y1="30" x2="900" y2="380" class="grid-line" stroke="#e5e7eb" opacity="0.5"/>
+
+                    <!-- Scale -->
+                    <text x="150" y="400" text-anchor="middle" class="axis-label">R$ 0</text>
+                    <text x="300" y="400" text-anchor="middle" class="axis-label">R$ 2M</text>
+                    <text x="450" y="400" text-anchor="middle" class="axis-label">R$ 4M</text>
+                    <text x="600" y="400" text-anchor="middle" class="axis-label">R$ 6M</text>
+                    <text x="750" y="400" text-anchor="middle" class="axis-label">R$ 8M</text>
+                    <text x="900" y="400" text-anchor="middle" class="axis-label">R$ 10M</text>
+
+                    <!-- Bars -->
+                    <rect x="150" y="40" width="755" height="50" fill="var(--color-rr2)" rx="3"/>
+                    <text x="920" y="67" class="value-label">R$ 5,67M</text>
+                    <text x="920" y="82" class="percentage-label">41,12%</text>
+                    <text x="120" y="67" class="axis-label" text-anchor="end">Nova Campinas</text>
+
+                    <rect x="150" y="110" width="613" height="50" fill="var(--color-rcr3)" rx="3"/>
+                    <text x="920" y="137" class="value-label">R$ 4,59M</text>
+                    <text x="920" y="152" class="percentage-label">33,28%</text>
+                    <text x="120" y="137" class="axis-label" text-anchor="end">Cambuí</text>
+
+                    <rect x="150" y="180" width="259" height="50" fill="var(--color-arr-apoio)" rx="3"/>
+                    <text x="920" y="207" class="value-label">R$ 1,94M</text>
+                    <text x="920" y="222" class="percentage-label">14,07%</text>
+                    <text x="120" y="207" class="axis-label" text-anchor="end">Taquaral</text>
+
+                    <rect x="150" y="250" width="166" height="50" fill="var(--color-sousas)" rx="3"/>
+                    <text x="920" y="277" class="value-label">R$ 1,24M</text>
+                    <text x="920" y="292" class="percentage-label">8,99%</text>
+                    <text x="120" y="277" class="axis-label" text-anchor="end">Sousas</text>
+
+                    <rect x="150" y="320" width="96" height="50" fill="var(--color-paulinia)" rx="3"/>
+                    <text x="920" y="347" class="value-label">R$ 0,72M</text>
+                    <text x="920" y="362" class="percentage-label">5,19%</text>
+                    <text x="120" y="347" class="axis-label" text-anchor="end">Paulinia</text>
+                </svg>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--color-rr2)"></div>
+                        <span>Nova Campinas (RR2 + 3R)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--color-rcr3)"></div>
+                        <span>Cambuí (RCR3)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--color-arr-apoio)"></div>
+                        <span>Taquaral (ARR Apoio + Ativ.)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--color-sousas)"></div>
+                        <span>Sousas (RC)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--color-paulinia)"></div>
+                        <span>Paulinia (Academia Templo)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cluster</th>
+                            <th>Faturamento Total</th>
+                            <th>Média Mensal</th>
+                            <th>% do Total</th>
+                            <th>Observações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="unit-name">
+                                <span class="unit-with-tooltip">
+                                    Nova Campinas
+                                    <span class="tooltip">17.397.249/0001-85 | 26.167.479/0001-49<br>RR2 + 3R Apoio</span>
+                                </span>
+                            </td>
+                            <td>R$ 5.666.113,43</td>
+                            <td>R$ 472.176,12</td>
+                            <td>41,12%</td>
+                            <td>Maior operação</td>
+                        </tr>
+                        <tr>
+                            <td class="unit-name">
+                                <span class="unit-with-tooltip">
+                                    Cambuí
+                                    <span class="tooltip">21.075.194/0001-64<br>RCR3 ATIVIDADES ESPORTIVAS EIRELI EPP</span>
+                                </span>
+                            </td>
+                            <td>R$ 4.585.867,85</td>
+                            <td>R$ 382.155,65</td>
+                            <td>33,28%</td>
+                            <td>Estável e consistente</td>
+                        </tr>
+                        <tr>
+                            <td class="unit-name">
+                                <span class="unit-with-tooltip">
+                                    Taquaral
+                                    <span class="tooltip">05.851.277/0001-41 | 08.107.884/0001-90<br>ARR Apoio + Atividades</span>
+                                </span>
+                            </td>
+                            <td>R$ 1.939.767,60</td>
+                            <td>R$ 161.647,30</td>
+                            <td>14,07%</td>
+                            <td>Em queda</td>
+                        </tr>
+                        <tr>
+                            <td class="unit-name">
+                                <span class="unit-with-tooltip">
+                                    Sousas
+                                    <span class="tooltip">39.145.795/0001-61<br>RC SOUSAS ATIVIDADES ESPORTIVAS LTDA</span>
+                                </span>
+                            </td>
+                            <td>R$ 1.239.686,40</td>
+                            <td>R$ 103.307,20</td>
+                            <td>8,99%</td>
+                            <td>Intermediária</td>
+                        </tr>
+                        <tr>
+                            <td class="unit-name">
+                                <span class="unit-with-tooltip">
+                                    Paulinia
+                                    <span class="tooltip">02.339.706/0001-08<br>ACADEMIA TEMPLO LTDA</span>
+                                </span>
+                            </td>
+                            <td>R$ 715.492,55</td>
+                            <td>R$ 59.624,38</td>
+                            <td>5,19%</td>
+                            <td>Menor, queda forte</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SEÇÃO DETALHADA (7 unidades) -->
+        <div id="detailed" class="section">
+            <div class="info-box">
+                <strong>📌 Visão Detalhada:</strong> Mostra cada uma das 7 unidades individualmente para entender o desempenho e dinâmica de cada operação separadamente.
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-value">R$ 13,79M</div>
+                    <div class="card-label">Faturamento Total</div>
+                </div>
+                <div class="card">
+                    <div class="card-value">7</div>
+                    <div class="card-label">Unidades Operacionais</div>
+                </div>
+                <div class="card">
+                    <div class="card-value">R$ 1,97M</div>
+                    <div class="card-label">Média Mensal Consolidada</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Faturamento por Unidade (12 meses) - Vista Detalhada</div>
+                <svg viewBox="0 0 1200 580" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid -->
+                    <line x1="180" y1="30" x2="180" y2="520" class="grid-line" stroke="#d1d5db"/>
+                    <line x1="180" y1="520" x2="1150" y2="520" class="grid-line" stroke="#d1d5db"/>
+                    <line x1="350" y1="30" x2="350" y2="520" class="grid-line" stroke="#e5e7eb" opacity="0.5"/>
+                    <line x1="520" y1="30" x2="520" y2="520" class="grid-line" stroke="#e5e7eb" opacity="0.5"/>
+                    <line x1="690" y1="30" x2="690" y2="520" class="grid-line" stroke="#e5e7eb" opacity="0.5"/>
+                    <line x1="860" y1="30" x2="860" y2="520" class="grid-line" stroke="#e5e7eb" opacity="0.5"/>
+                    <line x1="1030" y1="30" x2="1030" y2="520" class="grid-line" stroke="#e5e7eb" opacity="0.5"/>
+
+                    <!-- Scale -->
+                    <text x="180" y="545" text-anchor="middle" class="axis-label">R$ 0</text>
+                    <text x="350" y="545" text-anchor="middle" class="axis-label">R$ 2M</text>
+                    <text x="520" y="545" text-anchor="middle" class="axis-label">R$ 4M</text>
+                    <text x="690" y="545" text-anchor="middle" class="axis-label">R$ 6M</text>
+                    <text x="860" y="545" text-anchor="middle" class="axis-label">R$ 8M</text>
+                    <text x="1030" y="545" text-anchor="middle" class="axis-label">R$ 10M</text>
+
+                    <!-- 7 Bars -->
+                    <rect x="180" y="40" width="820" height="50" fill="var(--color-rr2)" rx="3"/>
+                    <text x="1020" y="67" class="value-label">R$ 4,82M | 34,98%</text>
+                    <text x="170" y="67" class="axis-label" text-anchor="end">A Nova Campinas</text>
+
+                    <rect x="180" y="105" width="780" height="50" fill="var(--color-rcr3)" rx="3"/>
+                    <text x="1020" y="132" class="value-label">R$ 4,59M | 33,28%</text>
+                    <text x="170" y="132" class="axis-label" text-anchor="end">A Cambuí</text>
+
+                    <rect x="180" y="170" width="211" height="50" fill="var(--color-sousas)" rx="3"/>
+                    <text x="1020" y="197" class="value-label">R$ 1,24M | 8,99%</text>
+                    <text x="170" y="197" class="axis-label" text-anchor="end">A Sousas</text>
+
+                    <rect x="180" y="235" width="170" height="50" fill="var(--color-arr-ativ)" rx="3"/>
+                    <text x="1020" y="262" class="value-label">R$ 1,00M | 7,27%</text>
+                    <text x="170" y="262" class="axis-label" text-anchor="end">A Taquaral</text>
+
+                    <rect x="180" y="300" width="160" height="50" fill="var(--color-arr-apoio)" rx="3"/>
+                    <text x="1020" y="327" class="value-label">R$ 0,94M | 6,81%</text>
+                    <text x="170" y="327" class="axis-label" text-anchor="end">A Taquaral 2</text>
+
+                    <rect x="180" y="365" width="144" height="50" fill="var(--color-3r)" rx="3"/>
+                    <text x="1020" y="392" class="value-label">R$ 0,84M | 6,13%</text>
+                    <text x="170" y="392" class="axis-label" text-anchor="end">A Nova Campinas 2</text>
+
+                    <rect x="180" y="430" width="122" height="50" fill="var(--color-paulinia)" rx="3"/>
+                    <text x="1020" y="457" class="value-label">R$ 0,72M | 5,19%</text>
+                    <text x="170" y="457" class="axis-label" text-anchor="end">A Paulinia</text>
+                </svg>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--color-rr2)"></div>
+                        <span>A Nova Campinas</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--color-rcr3)"></div>
+                        <span>A Cambuí</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--color-sousas)"></div>
+                        <span>A Sousas</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--color-arr-ativ)"></div>
+                        <span>A Taquaral</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--color-arr-apoio)"></div>
+                        <span>A Taquaral 2</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--color-3r)"></div>
+                        <span>A Nova Campinas 2</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: var(--color-paulinia)"></div>
+                        <span>A Paulinia</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Unidade</th>
+                            <th>Faturamento</th>
+                            <th>Média/Mês</th>
+                            <th>% Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1º</td>
+                            <td class="unit-name">
+                                <span class="unit-with-tooltip">
+                                    A Nova Campinas
+                                    <span class="tooltip">17.397.249/0001-85<br>R.R.2 ATIVIDADES ESPORTIVAS EIRELI EPP</span>
+                                </span>
+                            </td>
+                            <td>R$ 4.821.181,83</td>
+                            <td>R$ 401.765,15</td>
+                            <td>34,98%</td>
+                        </tr>
+                        <tr>
+                            <td>2º</td>
+                            <td class="unit-name">
+                                <span class="unit-with-tooltip">
+                                    A Cambuí
+                                    <span class="tooltip">21.075.194/0001-64<br>R.C.R 3 ATIVIDADES ESPORTIVAS EIRELI EPP</span>
+                                </span>
+                            </td>
+                            <td>R$ 4.585.867,85</td>
+                            <td>R$ 382.155,65</td>
+                            <td>33,28%</td>
+                        </tr>
+                        <tr>
+                            <td>3º</td>
+                            <td class="unit-name">
+                                <span class="unit-with-tooltip">
+                                    A Sousas
+                                    <span class="tooltip">39.145.795/0001-61<br>RC SOUSAS ATIVIDADES ESPORTIVAS LTDA</span>
+                                </span>
+                            </td>
+                            <td>R$ 1.239.686,40</td>
+                            <td>R$ 103.307,20</td>
+                            <td>8,99%</td>
+                        </tr>
+                        <tr>
+                            <td>4º</td>
+                            <td class="unit-name">
+                                <span class="unit-with-tooltip">
+                                    A Taquaral
+                                    <span class="tooltip">05.851.277/0001-41<br>A.R.R. ATIVIDADES ESPORTIVAS LTDA -ME</span>
+                                </span>
+                            </td>
+                            <td>R$ 1.001.000,00</td>
+                            <td>R$ 83.416,67</td>
+                            <td>7,27%</td>
+                        </tr>
+                        <tr>
+                            <td>5º</td>
+                            <td class="unit-name">
+                                <span class="unit-with-tooltip">
+                                    A Taquaral 2
+                                    <span class="tooltip">08.107.884/0001-90<br>A.R.R. APOIO ADMINISTRATIVO, GESTAO E ESPORTES LTDA - ME</span>
+                                </span>
+                            </td>
+                            <td>R$ 938.767,60</td>
+                            <td>R$ 78.230,63</td>
+                            <td>6,81%</td>
+                        </tr>
+                        <tr>
+                            <td>6º</td>
+                            <td class="unit-name">
+                                <span class="unit-with-tooltip">
+                                    A Nova Campinas 2
+                                    <span class="tooltip">26.167.479/0001-49<br>3R APOIO ADMINISTRATIVO - EIRELI</span>
+                                </span>
+                            </td>
+                            <td>R$ 844.931,60</td>
+                            <td>R$ 70.410,97</td>
+                            <td>6,13%</td>
+                        </tr>
+                        <tr>
+                            <td>7º</td>
+                            <td class="unit-name">
+                                <span class="unit-with-tooltip">
+                                    A Paulinia
+                                    <span class="tooltip">02.339.706/0001-08<br>ACADEMIA TEMPLO LTDA</span>
+                                </span>
+                            </td>
+                            <td>R$ 715.492,55</td>
+                            <td>R$ 59.624,38</td>
+                            <td>5,19%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showView(viewName) {
+            // Hide all sections
+            document.getElementById('consolidated').classList.remove('active');
+            document.getElementById('detailed').classList.remove('active');
+
+            // Show selected section
+            document.getElementById(viewName).classList.add('active');
+
+            // Update buttons
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
+</body></html>

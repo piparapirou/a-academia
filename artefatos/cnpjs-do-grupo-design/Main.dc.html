@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>CNPJs por unidade</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..800&amp;family=IBM+Plex+Mono:wght@500;600&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 880px; min-height: 780px; box-sizing: border-box; padding: 40px 44px; display: flex; flex-direction: column; gap: 28px; background: {{t.bg}}; color: {{t.ink}}; font-family: 'IBM Plex Sans', system-ui, sans-serif">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: {{t.acc}}">Consulta rápida</div>
+<h1 style="margin: 0; font-family: 'Archivo', sans-serif; font-stretch: 112%; font-weight: 750; font-size: 34px; line-height: 1.1">CNPJs do grupo</h1>
+</div>
+<div style="font-size: 14px; color: {{t.ink2}}">7 empresas · 5 unidades · fonte: declarações JRC</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start">
+<sc-for list="{{units}}" as="u" hint-placeholder-count="5">
+<section style="background: {{t.surface}}; border: 1px solid {{t.line}}; border-radius: 14px; overflow: hidden">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; background: {{t.accSoft}}">
+<h2 style="margin: 0; font-family: 'Archivo', sans-serif; font-stretch: 108%; font-weight: 700; font-size: 17px; color: {{t.accInk}}">{{u.name}}</h2>
+<span style="font-size: 12px; font-weight: 600; color: {{t.accInk}}">{{u.count}}</span>
+</div>
+<div style="display: flex; flex-direction: column">
+<sc-for list="{{u.items}}" as="it" hint-placeholder-count="1">
+<div style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-top: 1px solid {{t.line}}">
+<div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0">
+<div style="font-size: 13px; font-weight: 500; color: {{t.ink2}}">{{it.name}}</div>
+<div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 19px; font-weight: 600; letter-spacing: 0.01em; font-variant-numeric: tabular-nums">{{it.cnpj}}</div>
+</div>
+<button type="button" onClick="{{it.copy}}" aria-label="{{it.aria}}" style="min-width: 92px; min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid {{t.acc}}; background: {{it.btnBg}}; color: {{it.btnInk}}; font: 600 13px 'IBM Plex Sans', sans-serif; cursor: pointer">{{it.label}}</button>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"tema":{"editor":"enum","options":["claro","escuro"],"default":"claro"},"$preview":{"width":880,"height":780}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const L = {bg:'#f4f6f5',surface:'#ffffff',ink:'#111614',ink2:'#4a5550',line:'#dce2df',acc:'#0e6b5c',accSoft:'#dcefea',accInk:'#0b5649',onAcc:'#ffffff'};
+    const D = {bg:'#0e1211',surface:'#161b19',ink:'#edf2ef',ink2:'#b1bbb6',line:'#29312e',acc:'#43b59f',accSoft:'#17312b',accInk:'#8fdcc9',onAcc:'#0e1211'};
+    const t = (this.props.tema ?? 'claro') === 'escuro' ? D : L;
+    const data = [
+      ['Nova Campinas', [['RR2 Atividades','17.397.249/0001-85'],['3R Apoio','26.167.479/0001-49']]],
+      ['Cambuí', [['RCR3 Academia','21.075.194/0001-64']]],
+      ['Taquaral', [['ARR Atividades','05.851.277/0001-41'],['ARR Apoio','08.107.884/0001-90']]],
+      ['Sousas', [['RC Sousas','39.145.795/0001-61']]],
+      ['Paulínia', [['Academia Templo','02.339.706/0001-08']]]
+    ];
+    const copied = this.state && this.state.copied;
+    const units = data.map(([name, list]) => ({
+      name,
+      count: list.length === 1 ? '1 empresa' : list.length + ' empresas',
+      items: list.map(([n, c]) => {
+        const on = copied === c;
+        return {
+          name: n, cnpj: c, aria: 'Copiar CNPJ de ' + n,
+          label: on ? 'Copiado' : 'Copiar',
+          btnBg: on ? t.acc : 'transparent',
+          btnInk: on ? t.onAcc : t.acc,
+          copy: () => {
+            try { navigator.clipboard && navigator.clipboard.writeText(c).catch(() => {}); } catch (e) {}
+            this.setState({ copied: c });
+            clearTimeout(this._tm);
+            this._tm = setTimeout(() => this.setState({ copied: null }), 1500);
+          }
+        };
+      })
+    }));
+    return { t, units };
+  }
+}
+</script>
+</body>
+</html>

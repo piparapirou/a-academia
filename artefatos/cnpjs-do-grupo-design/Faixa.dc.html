@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Faixa de CNPJs</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..800&amp;family=IBM+Plex+Mono:wght@500;600&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1200px; min-height: 300px; box-sizing: border-box; padding: 32px 36px; display: flex; flex-direction: column; gap: 16px; background: {{t.bg}}; color: {{t.ink}}; font-family: 'IBM Plex Sans', system-ui, sans-serif">
+<div style="display: flex; align-items: baseline; gap: 14px">
+<h2 style="margin: 0; font-family: 'Archivo', sans-serif; font-stretch: 110%; font-weight: 700; font-size: 18px">CNPJs do grupo</h2>
+<span style="font-size: 13px; color: {{t.ink2}}">toque para copiar</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="7">
+<button type="button" onClick="{{c.copy}}" aria-label="{{c.aria}}" style="display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-height: 64px; padding: 10px 16px; border-radius: 12px; border: 1px solid {{c.border}}; background: {{c.bg}}; color: {{t.ink}}; cursor: pointer; text-align: left">
+<span style="display: flex; gap: 8px; align-items: center; font: 600 12px 'IBM Plex Sans', sans-serif; color: {{t.ink2}}">
+<span>{{c.name}}</span>
+<span style="padding: 1px 8px; border-radius: 999px; background: {{t.accSoft}}; color: {{t.accInk}}; font-weight: 600">{{c.unit}}</span>
+</span>
+<span style="font: 600 16px 'IBM Plex Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums">{{c.cnpj}}</span>
+<span style="font: 600 11px 'IBM Plex Sans', sans-serif; color: {{t.acc}}; min-height: 14px">{{c.hint}}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"tema":{"editor":"enum","options":["claro","escuro"],"default":"claro"},"$preview":{"width":1200,"height":300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const L = {bg:'#f4f6f5',surface:'#ffffff',ink:'#111614',ink2:'#4a5550',line:'#dce2df',acc:'#0e6b5c',accSoft:'#dcefea',accInk:'#0b5649'};
+    const D = {bg:'#0e1211',surface:'#161b19',ink:'#edf2ef',ink2:'#b1bbb6',line:'#29312e',acc:'#43b59f',accSoft:'#17312b',accInk:'#8fdcc9'};
+    const t = (this.props.tema ?? 'claro') === 'escuro' ? D : L;
+    const data = [
+      ['RR2 Atividades','Nova Campinas','17.397.249/0001-85'],
+      ['3R Apoio','Nova Campinas','26.167.479/0001-49'],
+      ['RCR3 Academia','Cambuí','21.075.194/0001-64'],
+      ['ARR Atividades','Taquaral','05.851.277/0001-41'],
+      ['ARR Apoio','Taquaral','08.107.884/0001-90'],
+      ['RC Sousas','Sousas','39.145.795/0001-61'],
+      ['Academia Templo','Paulínia','02.339.706/0001-08']
+    ];
+    const copied = this.state && this.state.copied;
+    const chips = data.map(([name, unit, cnpj]) => {
+      const on = copied === cnpj;
+      return {
+        name, unit, cnpj, aria: 'Copiar CNPJ de ' + name,
+        hint: on ? 'copiado' : '',
+        bg: t.surface,
+        border: on ? t.acc : t.line,
+        copy: () => {
+          try { navigator.clipboard && navigator.clipboard.writeText(cnpj).catch(() => {}); } catch (e) {}
+          this.setState({ copied: cnpj });
+          clearTimeout(this._tm);
+          this._tm = setTimeout(() => this.setState({ copied: null }), 1500);
+        }
+      };
+    });
+    return { t, chips };
+  }
+}
+</script>
+</body>
+</html>
